@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="yandex-verification" content="770b2ee50b92ad1f" />
+    <link rel="android-chrome" sizes="192x192" href="~/android-chrome-192x192.png">
+    <link rel="android-chrome" sizes="512x512" href="~/android-chrome-512x512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicon-16x16.png">
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="~/favicon-32x32.png" alt="" width="30" height="30" class="d-inline-block align-text-top">
+                @@<strong>@ViewBag.Team.Name</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/team/"> Команда </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="/team/standart"> Стандарт </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                            Семейства
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/team/addfamily">Загрузить</a></li>
+                            <li><a class="dropdown-item" href="/team/library">Библиотека</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/team/projects"> Проекты </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                            Задачи
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item disabled" href="/team/addtask">Создать</a></li>
+                            <li><a class="dropdown-item disabled" href="/team/tasks">Активные</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        @if (User.IsInRole("Admin") || User.IsInRole("TeamOwner"))
+                        {
+                            <a class="nav-link" href="/team/userconsole"> Пользователи </a>
+                        }
+                        else
+                        {
+                            <a class="nav-link" href="/team/users"> Пользователи </a>
+                        }
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/support/"> Поддержка </a>
+                    </li>
+                </ul>
+                <button type="button" class="btn btn-warning d-flex disabled" id="submit">Alpha</button>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <main role="main" class="pb-3" style="margin-bottom:100px;">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted"><a href="mailto:support@revit-teams.ru">support@revit-teams.ru</a></span>
+            <span class="text-muted float-end"><a href="/contacts">Контакты</a></span>
+        </div>
+    </footer>
+    @RenderSection("Scripts", required: false)
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</body>
+    </html>

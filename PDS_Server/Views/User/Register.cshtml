@@ -1,0 +1,132 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Регистрация";
+    var fpn = new[] { "Ben", "Count", "Qui-Gon", "Obi-Wan", "Anakin", "Cal", "Luke", "Leia", "Yoda", "Darth", "Darth", "" };
+    var lpn = new[] { "Solo", "Dooku", "Jin", "Kenobi", "Skywalker", "Kestis", "Skywalker", "Organa", "Master", "Wader", "Malgus", "" };
+    var rnd = new Random().Next(0, fpn.Count()-1);
+}
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Регистрация</h4>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-warning col-md-8" role="alert">
+            @ViewBag.Alert
+        </div>
+    }
+    <div class="card col-md-8">
+        <div class="card-body">
+            <form class="row g-3 needs-validation" method="post" novalidate>
+                <div class="col-md-12">
+                    <label for="staticTeam" class="form-label">Id комманды</label>
+                    <input type="text" class="form-control" id="staticEmail" name="team" placeholder="@@example" required>
+                    <div class="invalid-feedback">
+                        Публичное альфа-тестирование доступно только для комманд
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="staticEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="staticEmail" name="email" required>
+                    <div class="valid-feedback">
+                        Выглядит годно!
+                    </div>
+                    <div class="invalid-feedback">
+                        Пожалуйста введите корректный email адрес
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="inputPassword" class="form-label">Пароль</label>
+                    <input type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" id="inputPassword" name="password" required>
+                    <div class="valid-feedback">
+                        Великолепно!
+                    </div>
+                    <div class="invalid-feedback">
+                        Должен содержать заглавные и строчные буквы и должен содержать минимум 8 символов
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="validationCustom03" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="validationCustom03" name="firstName" placeholder=@fpn[rnd] required>
+                </div>
+                <div class="col-md-12">
+                    <label for="validationCustom04" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="validationCustom04" name="lastName" placeholder=@lpn[rnd] required>
+                </div>
+                <div class="col-md-12">
+                    <label for="department_form" class="form-label">Отдел</label>
+                    <select class="form-select" id="department_form" name="department" required>
+                        @foreach(var d in ViewBag.Departments)
+                        {
+                            <option value="@d.Name">@d.Description</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-12" style="margin-top: 2rem; margin-bottom:1rem;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                        <label class="form-check-label" for="invalidCheck">
+                            Согласен с <a id="link-terms" href="javascript:null" class="card-link">пользовательским соглашением</a>
+                        </label>
+                        <div class="invalid-feedback">
+                            Необходимо согласие с пользовательским соглашением перед продолжением
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Пользовательское соглашение </h5>
+            </div>
+            <div class="modal-body">
+                @if (Model != null)
+                {
+                    foreach (var row in Model)
+                    {
+                        @Html.Raw(row)
+                    }
+                }
+                else
+                {
+                    <h5>Не найдено</h5>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="javascript:document.hidemodal()" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="module">
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), { keyboard: false });
+        document.getElementById('link-terms').addEventListener("click", Show);
+        document.hidemodal = function Show() { myModal.hide(); }
+        function Show() { myModal.show(); }
+
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+
+    </script>
+}

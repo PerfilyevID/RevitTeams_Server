@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Поддержка";
+    string action = User.Identity.IsAuthenticated ? "send" : "sendguest";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Консоль поддержки</h4>
+    @foreach (var report in Model)
+    {
+        <div class="card col-md-8" style="margin-bottom:1rem;">
+            <div class="card-body">
+                <h5 class="card-title">@report.Issue</h5>
+                <h6 class="card-subtitle mb-2 text-muted">GMT+3 @report.Time.AddHours(3).ToString("g")</h6>
+                <p class="card-text">@report.Description</p>
+                @if (report.Link != null)
+                {
+                    var link = $"/support/download/{report.Link}";
+                    <a href="@link" class="card-link">@report.Link</a>
+                }
+                @if (!report.IsClosed)
+                {
+                    <form class="row g-3 needs-validation" method="post" novalidate enctype="multipart/form-data" asp-action="answer" asp-controller="support" asp-route-id="@report.Id">
+                        <div class="col-md-12">
+                            <textarea class="form-control" id="staticComment" name="comment" rows="3" placeholder="Подробно" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-success" type="submit">Закрыть</button>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="col-12">
+                        <a type="button" href="@string.Format("/support/delete?id={0}", report.Id)" class="btn btn-sm btn-outline-danger">Удалить</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+    }
+</div>
+
+@section Scripts {
+    <script type="module">
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+
+    </script>
+}

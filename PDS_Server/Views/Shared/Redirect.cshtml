@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = "_Layout";
+    if (Model.Title != null)
+    {
+        ViewData["Title"] = (string)Model.Title;
+    }
+
+}
+
+<div class="container" style="height:100%">
+    <div class="col-11 col-md-10 col-lg-8 col-xl-6 mx-auto" style="height:100%">
+        <div class="card" style="margin-top:5rem;margin-bottom:5rem">
+            <div class="card-body">
+                <h5 class="card-title">@Html.Raw(Model.Header)</h5>
+                <img src="~/img/bernie-the-cat/@Model.Sticker" class="card-img-top">
+                <h6 class="card-subtitle mb-2 text-muted">@Html.Raw(Model.Quote)</h6>
+                <p class="card-text">@Html.Raw(Model.Body)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @if (Model.Action != null && Model.Controller != null)
+    {
+        <script>
+
+            setTimeout(x =>
+                {
+                    window.location.href = "@Url.Action((string)Model.Action, (string)Model.Controller)";
+                }, 8000);
+
+        </script>
+    }
+}
+
+
+
+

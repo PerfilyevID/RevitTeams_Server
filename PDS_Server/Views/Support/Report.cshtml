@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Поддержка";
+    string action = User.Identity.IsAuthenticated ? "send" : "sendguest";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Обращение <strong>#@Model.Id</strong></h4>
+    <div class="card col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Issue</h5>
+            <h6 class="card-subtitle mb-2 text-muted">GMT+3 @Model.Time.AddHours(3).ToString("g")</h6>
+            <div class="alert alert-light" role="alert">
+                @Model.Description
+            </div>
+            @if (!Model.IsClosed)
+            {
+                if ((DateTime.UtcNow - Model.Time).TotalMinutes < 45)
+                {
+                    <button class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        Не просмотрено
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        В работе
+                    </button>
+                }
+            }
+            else
+            {
+                <div class="alert alert-success" role="alert">
+                    @Model.Comment
+                </div>
+            }
+        </div>
+        </div>
+</div>
+
+@section Scripts { }

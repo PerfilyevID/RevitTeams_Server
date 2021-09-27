@@ -1,0 +1,118 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Команда";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Загрузить семейство</h4>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-warning col-md-8" role="alert">
+            @ViewBag.Alert
+        </div>
+    }
+    @if (ViewBag.Success != null)
+    {
+        <div class="alert alert-success col-md-8" role="alert">
+            @ViewBag.Success
+        </div>
+    }
+    <div class="card col-md-8">
+        <div class="card-body">
+            <form class="row g-3 needs-validation" method="post" novalidate enctype="multipart/form-data">
+                <div class="col-md-12">
+                    <label for="staticfamilyName" class="form-label">Наименование</label>
+                    <input type="text" class="form-control" id="staticfamilyName" name="familyName" required>
+                </div>
+                <div class="col-md-12">
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <label for="staticFamilyDescription" class="form-label">Описание</label>
+                    <textarea class="form-control" id="staticFamilyDescription" name="familyDescription" rows="9" placeholder="Подробно" required></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label for="staticLod" class="form-label">Уровень детализации</label>
+                    <select class="form-select" id="staticLod" required>
+                        <option value="0">LOD100</option>
+                        <option value="1">LOD200</option>
+                        <option value="2">LOD300</option>
+                        <option value="3">LOD400</option>
+                        <option value="4">LOD500</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label for="staticCategory" class="form-label">Категория</label>
+                    <select class="form-select" id="staticCategory" required>
+                        @foreach (var cat in ViewBag.Categories)
+                        {
+                            <option value="@cat.Id.ToString()">@cat.Name</option>
+                            if (cat.Children != null)
+                            {
+                                @foreach (var subCat in cat.Children)
+                                {
+                                    <option value="@subCat.Id.ToString()"> @cat.Name / @subCat.Name</option>
+                                }
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2016">Revit2016</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2016">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2017">Revit2017</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2017">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2018">Revit2018</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2018">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2019" required>Revit2019</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2019">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2020">Revit2020</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2020">
+                    </div>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="formFile-2021">Revit2021</label>
+                        <input class="form-control" name="file" type="file" id="formFile-2021">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module">
+    window.addEventListener('load', function () {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    }, false)
+    </script>
+}

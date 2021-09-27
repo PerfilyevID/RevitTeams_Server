@@ -1,0 +1,33 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Настройки";
+}
+<div class="container row justify-content-md-start" style="margin-top: 5rem; margin-bottom:5rem;">
+    <div class="d-flex align-items-start">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <button class="nav-link @(Model.Selected==0? " active" : "")" id="v-pills-personal-tab" data-bs-toggle="pill" data-bs-target="#v-pills-personal" type="button" role="tab" aria-controls="v-pills-personal" aria-selected="@(Model.Selected==0? "true" : "false")">Home</button>
+            <button class="nav-link @(Model.Selected==1? " active" : "")" id="v-pills-teams-tab" data-bs-toggle="pill" data-bs-target="#v-pills-teams" type="button" role="tab" aria-controls="v-pills-teams" aria-selected="@(Model.Selected==1? "true" : "false")">Profile</button>
+            <button class="nav-link @(Model.Selected==2? " active" : "")" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="@(Model.Selected==2? "true" : "false")">Messages</button>
+            <button class="nav-link @(Model.Selected==3? " active" : "")" id="v-pills-payment-tab" data-bs-toggle="pill" data-bs-target="#v-pills-payment" type="button" role="tab" aria-controls="v-pills-payment" aria-selected="@(Model.Selected==3? "true" : "false")">Settings</button>
+        </div>
+        <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade @(Model.Selected==0? " show active" : "")" id="v-pills-personal" role="tabpanel" aria-labelledby="v-pills-personal-tab">
+
+            </div>
+            <div class="tab-pane fade @(Model.Selected==1? " show active" : "")" id="v-pills-teams" role="tabpanel" aria-labelledby="v-pills-teams-tab">
+
+            </div>
+            <div class="tab-pane fade @(Model.Selected==2? " show active" : "")" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+
+            </div>
+            <div class="tab-pane fade @(Model.Selected==3? " show active" : "")" id="v-pills-payment" role="tabpanel" aria-labelledby="v-pills-payment-tab">
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+    @section Scripts { }

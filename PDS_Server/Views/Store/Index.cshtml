@@ -1,0 +1,243 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Консоль";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center">
+    <div class="container px-0" style="margin-bottom: 1rem; margin-top: 1rem;">
+        <button type="button" id="btn-add-plugin" class="btn btn-outline-success">Новый плагин</button>
+    </div>
+    @foreach (var plugin in Model)
+    {
+        <div class="card col-md-12" style="margin-bottom: 1rem;">
+            <div class="card-body">
+
+                <div class="row">
+                    <h5 class="card-title">@plugin.Name</h5>
+                    <div class="float-end" style="position:absolute;right:1.0rem;">
+                        <a type="button" href="@string.Format("/store/delete?id={0}", plugin.Id)" class="btn btn-sm btn-outline-danger float-end">Удалить</a>
+
+                    </div>
+                </div>
+
+                <h6 class="card-subtitle mb-2 text-muted">@plugin.Description</h6>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr class="text-center">
+                                <th scope="col">Статус</th>
+                                <th scope="col">Версия</th>
+                                <th scope="col">R2016</th>
+                                <th scope="col">R2017</th>
+                                <th scope="col">R2018</th>
+                                <th scope="col">R2019</th>
+                                <th scope="col">R2020</th>
+                                <th scope="col">R2021</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (plugin.Versions != null)
+                            {
+                                foreach (var version in plugin.Versions)
+                                {
+                                    <tr class="align-middle text-center table-active">
+                                        @if (version.Published)
+                                        {
+                                            <td><a type="button" href="@string.Format("/store/hide?id={0}&number={1}", plugin.Id, version.Number)" class="btn btn-sm btn-success">Опубликован</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td><a type="button" href="@string.Format("/store/publish?id={0}&number={1}", plugin.Id, version.Number)" class="btn btn-sm btn-danger">Недоступен</a></td>
+                                        }
+                                        <td>@version.Number</td>
+                                        @foreach (var link in version.RevitVersions)
+                                        {
+                                            if (link.Link != null)
+                                            {
+                                                <td><a type="button" href="@string.Format("/store/deleterevitversion?plugin={0}&version={1}&revitVersion={2}&link={3}", plugin.Id, version.Number, link.Number, link.Link)" class="btn btn-sm btn-outline-success">Удалить</a></td>
+                                            }
+                                            else
+                                            {
+                                                <td><button type="button" id="@string.Format("{0}:{1}:{2}", plugin.Id, version.Number, link.Number)" onclick="onRvtUpload()" class="btn btn-sm btn-link">Загрузить</button></td>
+                                            }
+                                        }
+                                    </tr>
+                                    <tr>
+                                        <td colspan="8">
+                                            @version.Changelog
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="container px-0" style="margin-bottom: 1rem; margin-top: 1rem;">
+                        <button type="button" id="@plugin.Id" onclick="onNewVersion()" class="btn btn-sm btn-outline-success">Добавить версию</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="modal-add-plugin" tabindex="-1" role="dialog" aria-labelledby="modal-add-plugin-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-add-plugin-title">Новый плагин</h5>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" asp-action="addplugin" asp-controller="store" method="post" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="target_form" class="form-label">Доступ</label>
+                            <select class="form-select" id="target_form" name="target" aria-label="Default select example" required>
+                                <option value="cmn">Common</option>
+                                <option value="tms">Teams only</option>
+                                <option value="pnl">Personal</option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-6">
+                            <label for="version_form" class="form-label">Первая версия</label>
+                            <input class="form-control" placeholder="0.0.0.1a" name="version" id="version_form" required>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="title_form" class="form-label">Наименование</label>
+                        <input class="form-control" placeholder="Untitled" name="title" id="title_form" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="description_form" class="form-label">Описание</label>
+                        <textarea class="form-control" id="description_form" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="changelog_form" class="form-label">Changelog</label>
+                        <textarea class="form-control" id="changelog_form" name="changelog" rows="3" required></textarea>
+                    </div>
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="publish" value="publish"> Опубликовать
+                        </label>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary" type="submit">Создать</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="javascript:document.hidemodal()" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-add-revit-version" tabindex="-1" role="dialog" aria-labelledby="modal-add-revit-version-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-add-revit-version-title">Добавить архив</h5>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" enctype="multipart/form-data" id="form-rvt-ver" asp-action="addrevitversion" asp-route-target="null" asp-controller="store" method="post" novalidate>
+                    <div class="col-md-12">
+                        <label for="formFile" class="form-label">Pick zip-archive</label>
+                        <input class="form-control" name="file" type="file" id="formFile" required>
+                        <div class="invalid-feedback">требуется Zip-архив.</div>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" type="submit">Подтвердить</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="javascript:document.hidemodal()" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-add-plugin-version" tabindex="-1" role="dialog" aria-labelledby="modal-add-plugin-version-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-add-plugin-version-title">Новый плагин</h5>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" enctype="multipart/form-data" id="form-plugin-version" asp-action="addversion" asp-route-target="null" asp-controller="store" method="post" novalidate>
+                    <div class="col-md-12">
+                        <label for="version_form" class="form-label">Версия</label>
+                        <input class="form-control" placeholder="0.0.0.1a" name="version" id="version_form" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="changelog_form" class="form-label" style="margin-top: 1rem;">Changelog</label>
+                        <textarea class="form-control" id="changelog_form" name="changelog" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" type="submit">Создать</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="javascript:document.hidemodal()" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module">
+        var modalAddPlugin = new bootstrap.Modal(document.getElementById('modal-add-plugin'), { keyboard: true });
+        var modalAddRevitVersion = new bootstrap.Modal(document.getElementById('modal-add-revit-version'), { keyboard: true });
+        var modalAddVersion = new bootstrap.Modal(document.getElementById('modal-add-plugin-version'), { keyboard: true });
+
+        document.getElementById('btn-add-plugin').addEventListener("click", Show);
+
+        document.hidemodal = function Show() { modalAddPlugin.hide(); modalAddRevitVersion.hide(); modalAddVersion.hide(); }
+
+        function Show() { modalAddPlugin.show(); }
+
+        document.onRvtUpload = function onRvtUpload(e) {
+
+            var e = window.event;
+            var element = document.getElementById('form-rvt-ver');
+            element.reset();
+            var routes = element.getAttribute("action").split("/")
+            routes.pop(routes[routes.length - 1]);
+            var newRoute = routes.join("/") + "/" + e.target.id
+            element.setAttribute("action", newRoute);
+            element.classList -= ".was-validated";
+            modalAddRevitVersion.show();
+        }
+
+        document.onNewVersion = function onNewVersion() {
+            var e = window.event;
+            var element = document.getElementById('form-plugin-version');
+            element.reset();
+            var routes = element.getAttribute("action").split("/")
+            routes.pop(routes[routes.length - 1]);
+            var newRoute = routes.join("/") + "/" + e.target.id
+            element.setAttribute("action", newRoute);
+            element.classList -= ".was-validated";
+            modalAddVersion.show();
+            console.log(element.getAttribute("action"));
+        }
+
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+
+    </script>
+}

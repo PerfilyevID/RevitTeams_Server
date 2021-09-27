@@ -1,0 +1,77 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Команда";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Новая задача</h4>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-warning col-md-8" role="alert">
+            @ViewBag.Alert
+        </div>
+    }
+    <div class="card col-md-8">
+
+        <div class="card-body">
+            <form class="row g-3 needs-validation" method="post" novalidate>
+                <div class="col-md-12">
+                    <label for="taskName_form" class="form-label">Название задачи</label>
+                    <input type="text" class="form-control" id="taskName" _form name="taskName" required>
+                </div>
+                <div class="col-md-12">
+                    <label for="user_form" class="form-label">Исполнитель</label>
+                    <select class="form-select" id="user_form" required>
+                        <option selected></option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12">
+                    <label for="description_form" class="form-label">Описание</label>
+                    <textarea class="form-control" id="description_form" name="description" rows="6" required></textarea>
+                </div>
+                <div class="col-md-12">
+                    <label for="validationCustom03" class="form-label">Дата окончания</label>
+                    <input type="datetime-local" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module">
+        $(function () {
+            $('#datetimepicker2').datetimepicker({
+                locale: 'ru'
+            });
+        });
+
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+
+    </script>
+}

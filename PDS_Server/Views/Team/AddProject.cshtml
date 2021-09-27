@@ -1,0 +1,34 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Команда";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center">
+
+</div>
+
+@section Scripts {
+    <script type="module">
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), { keyboard: false });
+        document.getElementById('link-terms').addEventListener("click", Show);
+        document.hidemodal = function Show() { myModal.hide(); }
+        function Show() { myModal.show(); }
+
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+
+    </script>
+}

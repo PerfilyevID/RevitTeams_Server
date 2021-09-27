@@ -1,0 +1,78 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Поддержка";
+    string action = User.Identity.IsAuthenticated ? "send" : "sendguest";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Служба поддержки</h4>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-warning col-md-8" role="alert">
+            @ViewBag.Alert
+        </div>
+    }
+    @if (ViewBag.Success != null)
+    {
+        <div class="alert alert-success col-md-8" role="alert">
+            @ViewBag.Success
+        </div>
+    }
+    <div class="card col-md-8">
+        <div class="card-body">
+            <form class="row g-3 needs-validation" method="post" novalidate enctype="multipart/form-data" asp-controller="support" asp-action="@action">
+                <div class="col-md-12">
+                    <label for="staticIssue" class="form-label">Заголовок</label>
+                    <input type="text" class="form-control" id="staticIssue" name="issue" placeholder="Коротко" required>
+                    <div class="invalid-feedback">
+                        Это поможет нам оперативнее реагировать на запросы
+                    </div>
+                </div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="col-md-12">
+                        <label for="staticEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="staticEmail" name="email" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите корректный email адрес
+                        </div>
+                    </div>
+                }
+                <div class="col-md-12">
+                    <label for="staticDescription" class="form-label">Описание</label>
+                    <textarea class="form-control" id="staticDescription" name="description" rows="3" placeholder="Подробно" required></textarea>
+                    <div class="valid-feedback">
+                        Необходимо для получения обратной связи
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="formFile" class="form-label">Скриншот</label>
+                    <input class="form-control" name="file" type="file" id="formFile">
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module">
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+    </script>
+}

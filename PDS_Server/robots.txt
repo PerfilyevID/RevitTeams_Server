@@ -1,0 +1,4 @@
+﻿User-agent: *
+allow: /
+
+Host: http://www.revit-teams.ru

@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Авторизация";
+    var fpn = new[] { "Ben", "Count", "Qui-Gon", "Obi-Wan", "Anakin", "Cal", "Luke", "Leia", "Yoda", "Darth", "Darth", "" };
+    var lpn = new[] { "Solo", "Dooku", "Jin", "Kenobi", "Skywalker", "Kestis", "Skywalker", "Organa", "Master", "Wader", "Malgus", "" };
+    var rnd = new Random().Next(0, fpn.Count()-1);
+}
+<div class="container row justify-content-md-center" style="margin-top: 5rem; margin-bottom:5rem;">
+    <h4 class="col-md-8">Авторизация</h4>
+    @if (ViewBag.Alert != null)
+    {
+        <div class="alert alert-warning col-md-8" role="alert">
+            @ViewBag.Alert
+        </div>
+    }
+    <div class="card col-md-8">
+        <div class="card-body">
+            <form method="post">
+                <div class="col-md-12">
+                    <label for="staticEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="staticEmail" name="email" required>
+                </div> <br />
+                <div class="col-md-12">
+                    <label for="inputPassword" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="inputPassword" name="password" required>
+                </div> <br />
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Вход</button>
+                </div>
+                <a class="card-link float-end" href="/user/register">Регистрация</a>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts { }
